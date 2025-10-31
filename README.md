@@ -30,9 +30,12 @@
 * QueryDSL
 * MySQL
 * JWT
+* Redis
+* Elasticsearch
 
 ### DevOps & Cloud
 * Azure
+* Aws
 * Docker
 * Nginx
 * GitHub Actions
@@ -46,8 +49,18 @@
 
 FC ONLINE 유저들이 필요로 하는 선수의 상세 스탯, 실시간 시세, 팀 경력 등 다양한 정보를 API 형태로 제공하는 백엔드 서비스입니다. 사용자 편의 기능을 통해 데이터와 상호작용하며 효과적인 정보 검색이 가능하도록 설계했습니다.
 
+* **Live Site:** [바로가기](https://black-grass-0b86e0300.2.azurestaticapps.net)
 * **API Documentation (Swagger):** [바로가기](https://be-fc-scouter-app-djgdgqcgeedhe4fs.southeastasia-01.azurewebsites.net/swagger-ui/index.html#/)
 * **Tech Stack:** `Spring Boot`, `Spring Security`, `JWT`, `MySQL`, `JPA`
+
+
+### 실시간 눈 정보 감지 서비스, '눈ON (SnowNow)'
+
+공공데이터포털의 "초단기실황" API를 활용하여 실시간 눈(강설) 정보를 감지하는 백엔드 서비스입니다.
+Redis를 통한 캐싱으로 API 응답 속도를 최적화하고, Elasticsearch를 활용하여 강설 데이터를 저장 및 분석할 수 있도록 설계했습니다. 사용자는 실시간으로 어느 지역에 눈이 오는지에 대한 알림을 받을 수 있습니다.
+
+* **Live Site:** [바로가기](https://snownow.info/)
+* **Tech Stack:** `Spring Boot`, `MySQL`, `JPA`, `Redis`, `Elasticsearch`
 
 ---
 

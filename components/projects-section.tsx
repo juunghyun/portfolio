@@ -1,18 +1,18 @@
 import { Github, ExternalLink } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-// 1. 프로젝트 타입을 위한 interface 정의
+// 1. Project 인터페이스에 isExpired(만료 여부) 속성 추가
 interface Project {
   title: string;
   description: string;
   github: string;
   techStack: string[];
-  swagger?: string; // swagger는 선택적 속성 (있을 수도 없을 수도 있음)
-  site?: string;    // site는 선택적 속성 (있을 수도 없을 수도 있음)
+  swagger?: string;
+  site?: string;
+  isExpired?: boolean; // 서버 종료 여부
 }
 
 export function ProjectsSection() {
-  // 2. projects 배열에 위에서 정의한 Project[] 타입을 지정
   const projects: Project[] = [
     {
       title: "FC Scouter Web Service",
@@ -21,15 +21,16 @@ export function ProjectsSection() {
       github: "https://github.com/juunghyun/be-fc-online",
       swagger: "https://be-fc-scouter-app-djgdgqcgeedhe4fs.southeastasia-01.azurewebsites.net/swagger-ui/index.html#/",
       techStack: ["Spring Boot", "Spring Security", "JWT", "MySQL", "JPA"],
+      isExpired: true, // 서버 종료 상태로 설정
     },
-    // 새로 추가된 '눈ON' 프로젝트
     {
       title: "눈ON (SnowNow)",
       description:
           "공공데이터포털의 '초단기실황' API를 활용하여 실시간 눈(강설) 정보를 감지하는 백엔드 서비스. Spring Boot, MySQL, JPA, Redis, Elasticsearch를 기반으로 구축되었습니다.",
       github: "https://github.com/juunghyun/snow-on-be",
-      site: "https://snownow.info/", // Live 사이트 주소
+      site: "https://snownow.info/",
       techStack: ["Spring Boot", "MySQL", "JPA", "Redis", "Elasticsearch"],
+      isExpired: true, // 서버 종료 상태로 설정
     },
   ]
 
@@ -49,14 +50,21 @@ export function ProjectsSection() {
                       className="border-border hover:border-primary/50 transition-all hover:shadow-lg flex flex-col"
                   >
                     <CardHeader>
-                      <CardTitle className="text-2xl text-balance font-sans">{project.title}</CardTitle>
+                      <CardTitle className="text-2xl text-balance font-sans">
+                        {project.title}
+                        {project.isExpired && (
+                            <span className="ml-2 text-sm font-normal text-red-500 bg-red-50 px-2 py-0.5 rounded border border-red-100">
+                            Service Ended
+                          </span>
+                        )}
+                      </CardTitle>
                       <CardDescription className="text-base leading-relaxed text-pretty font-sans">
                         {project.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4 font-sans flex-grow flex flex-col justify-between">
-                      {/* 링크 섹션 */}
                       <div className="flex items-center gap-4">
+                        {/* GitHub은 서버와 무관하므로 유지하되, 필요시 똑같이 처리 가능 */}
                         <a
                             href={project.github}
                             target="_blank"
@@ -67,34 +75,47 @@ export function ProjectsSection() {
                           GitHub
                         </a>
 
-                        {/* 3. 이제 project.swagger와 project.site가 'Project' 타입에
-                         선택적으로 정의되어 있으므로 에러가 발생하지 않습니다. */}
+                        {/* Swagger API 링크 처리 */}
                         {project.swagger && (
-                            <a
-                                href={project.swagger}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                              Swagger API
-                            </a>
+                            project.isExpired ? (
+                                <span className="flex items-center gap-2 text-sm text-muted-foreground line-through cursor-not-allowed opacity-60" title="서버가 종료되어 접속할 수 없습니다.">
+                                <ExternalLink className="w-4 h-4" />
+                                Swagger API
+                              </span>
+                            ) : (
+                                <a
+                                    href={project.swagger}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                  Swagger API
+                                </a>
+                            )
                         )}
 
+                        {/* Live Site 링크 처리 */}
                         {project.site && (
-                            <a
-                                href={project.site}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                              Live Site
-                            </a>
+                            project.isExpired ? (
+                                <span className="flex items-center gap-2 text-sm text-muted-foreground line-through cursor-not-allowed opacity-60" title="서버가 종료되어 접속할 수 없습니다.">
+                                <ExternalLink className="w-4 h-4" />
+                                Live Site
+                              </span>
+                            ) : (
+                                <a
+                                    href={project.site}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                  Live Site
+                                </a>
+                            )
                         )}
                       </div>
 
-                      {/* 기술 스택 섹션 */}
                       <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
                         {project.techStack.map((tech) => (
                             <span
@@ -114,4 +135,3 @@ export function ProjectsSection() {
       </>
   )
 }
-
